@@ -1,9 +1,16 @@
 import React, { useState } from "react";
 import { assets } from "../assets/assets";
 import Header from "../components/Header";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
+  const navigate = useNavigate();
+
   const [isRegister, setIsRegister] = useState(true);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   function handleLogin(e) {
     e.preventDefault(); // Prevent page refresh
@@ -27,6 +34,7 @@ function Login() {
             <img
               src={assets.logo}
               alt="Logo"
+              onClick={() => navigate("/")}
               className="w-28 sm:w-32 mx-auto mb-2"
             />
 
@@ -34,10 +42,24 @@ function Login() {
               {isRegister ? "Register" : "Log In"}
             </h2>
 
+            {isRegister ? (
+              <input
+                type="text"
+                name="name"
+                placeholder="Name"
+                onChange={(e) => setName(e.target.value)}
+                required
+                className="border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            ) : (
+              ""
+            )}
+
             <input
               type="email"
               name="email"
               placeholder="Email"
+              onChange={(e) => setEmail(e.target.value)}
               required
               className="border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -46,9 +68,30 @@ function Login() {
               type="password"
               name="password"
               placeholder="Password"
+              onChange={(e) => setPassword(e.target.value)}
               required
               className="border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+            {isRegister ? (
+              <input
+                type="password"
+                name="confirm password"
+                placeholder="Confirm Password"
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                className="border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            ) : (
+              ""
+            )}
+
+            <button
+              type="button"
+              onClick={() => navigate("/reset-password")}
+              className="text-sm text-cyan-700 hover:underline transition duration-300"
+            >
+              {isRegister ? "" : "Forgot Password?"}
+            </button>
 
             <button
               type="submit"
