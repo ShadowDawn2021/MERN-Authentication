@@ -15,7 +15,9 @@ export const getUserData = async (req, res) => {
       success: true,
       userData: {
         name: user.name,
+        email: user.email,
         isVerified: user.isVerified,
+        _id: user._id,
       },
     });
   } catch (error) {

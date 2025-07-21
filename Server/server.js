@@ -6,6 +6,7 @@ import connectDB from "./config/mongodb.js";
 import authRoute from "./routes/authRoute.js";
 import userAuth from "./middleware/userAuth.js";
 import userRouter from "./routes/userRoute.js";
+import postRouter from "./routes/postRoute.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -24,6 +25,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRouter);
+app.use("/api/posts", postRouter);
 
 app.listen(port, () => {
   console.log(`app is listening to port ${port}`);
