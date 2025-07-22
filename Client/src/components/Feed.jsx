@@ -2,6 +2,8 @@ import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { AppContext } from "../context/AppContext";
 import { toast } from "react-toastify";
+import EditModal from "./editModal";
+import DeleteModal from "./deleteModal";
 
 function Feed() {
   const { backendUrl, userData } = useContext(AppContext);
@@ -21,10 +23,9 @@ function Feed() {
       const { data } = await axios.get(backendUrl + "/api/posts", {
         withCredentials: true,
       });
-      console.log("Attempting to fetch posts...");
+
       setPosts(data.posts);
     } catch (err) {
-      console.log("Attempting to fetch posts...");
       toast.error(err.message + ":Failed to load posts");
     }
   };
@@ -114,36 +115,27 @@ function Feed() {
         />
       </div>
 
-      {/* Edit Modal 🔧 ADDED */}
+      {/* Edit Modal */}
       {editingId && (
-        <div className="fixed inset-0 backdrop-blur-sm bg-black/30 flex justify-center items-center z-50">
-          <div className="bg-white p-4 rounded shadow w-[90%] max-w-md">
-            <h3 className="text-lg font-semibold mb-2">Edit your post</h3>
-            <textarea
-              value={editingContent}
-              onChange={(e) => setEditingContent(e.target.value)}
-              className="w-full border p-2 rounded mb-4"
-              rows={4}
-            />
-            <div className="flex justify-end gap-2">
-              <button
-                onClick={() => {
-                  setEditingId(null);
-                  setEditingContent("");
-                }}
-                className="text-gray-500"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSaveEdit}
-                className="bg-blue-500 text-white px-4 py-1 rounded"
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
+        <EditModal
+          content={editingContent}
+          setContent={setEditingContent}
+          onCancel={() => {
+            setEditingId(null);
+            setEditingContent("");
+          }}
+          onSave={handleSaveEdit}
+        />
+      )}
+      {/* Delete Model */}
+      {postToDelete && (
+        <DeleteModal
+          onCancel={() => setPostToDelete(null)}
+          onConfirm={async () => {
+            await handleDeletePost(postToDelete._id);
+            setPostToDelete(null);
+          }}
+        />
       )}
 
       {/* Post List */}
@@ -189,34 +181,6 @@ function Feed() {
             )}
           </div>
         ))}
-
-      {postToDelete && (
-        <div className="fixed inset-0 backdrop-blur-sm bg-black/30 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-xl shadow-xl max-w-sm w-full">
-            <h2 className="text-lg font-semibold mb-4">Delete Post</h2>
-            <p className="text-sm text-gray-700 mb-6">
-              Are you sure you want to delete this post?
-            </p>
-            <div className="flex justify-end gap-2">
-              <button
-                onClick={() => setPostToDelete(null)}
-                className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-sm"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={async () => {
-                  await handleDeletePost(postToDelete._id);
-                  setPostToDelete(null);
-                }}
-                className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600 text-sm"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
