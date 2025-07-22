@@ -112,7 +112,7 @@ export const sendVerificationOTP = async (req, res) => {
   try {
     const { userId } = req.body;
     const user = await userModel.findById(userId);
-    console.log(user);
+    console.log(user + " sendVerificationOTP TRY block");
     if (user.isVerified) {
       return res.json({
         success: false,

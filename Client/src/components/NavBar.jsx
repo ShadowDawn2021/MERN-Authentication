@@ -26,26 +26,6 @@ function NavBar() {
     }
   };
 
-  const handleSendOTP = async () => {
-    try {
-      axios.defaults.withCredentials = true;
-      const { data } = await axios.post(
-        backendUrl + "/api/auth/send-verify-email",
-        {},
-        { withCredentials: true }
-      );
-
-      if (data.success) {
-        navigate("/verify-email");
-        toast.success(data.message);
-      } else {
-        toast.error(data.message);
-      }
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
-
   // Detect clicks outside the dropdown to close it
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -82,7 +62,7 @@ function NavBar() {
                 <li
                   onClick={() => {
                     setShowDropdown(false);
-                    handleSendOTP();
+                    navigate("/verify-email");
                   }}
                   className="py-2 px-4 hover:bg-gray-100 cursor-pointer"
                 >
