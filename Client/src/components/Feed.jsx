@@ -10,6 +10,7 @@ function Feed() {
   const [editingId, setEditingId] = useState(null); // 🔧 MODIFIED
   const [editingContent, setEditingContent] = useState(""); // 🔧 MODIFIED
   const [postToDelete, setPostToDelete] = useState(null);
+  const [searchItem, setSearchItem] = useState("");
 
   useEffect(() => {
     fetchPosts();
@@ -103,6 +104,16 @@ function Feed() {
         </button>
       </div>
 
+      <div className="mb-4">
+        <input
+          className="w-full p-2 border rounded"
+          type="text"
+          placeholder="Looking for something?"
+          value={searchItem}
+          onChange={(e) => setSearchItem(e.target.value)}
+        />
+      </div>
+
       {/* Edit Modal 🔧 ADDED */}
       {editingId && (
         <div className="fixed inset-0 backdrop-blur-sm bg-black/30 flex justify-center items-center z-50">
@@ -136,37 +147,48 @@ function Feed() {
       )}
 
       {/* Post List */}
-      {posts.map((post) => (
-        <div
-          key={post._id}
-          className="bg-white shadow p-4 mb-4 rounded flex flex-col"
-        >
-          <div className="flex justify-between items-center mb-2">
-            <span className="font-semibold">{post.userId.name}</span>
-            <span className="text-sm text-gray-500">
-              {new Date(post.createdAt).toLocaleString()}
-            </span>
-          </div>
-          <p className="mb-2">{post.content}</p>
-
-          {post.userId._id?.toString() === userData._id?.toString() && (
-            <div className="flex gap-2">
-              <button
-                onClick={() => handleEditPost(post._id, post.content)}
-                className="text-blue-500 text-sm"
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => setPostToDelete(post)}
-                className="text-red-500 text-sm"
-              >
-                Delete
-              </button>
+      {posts
+        .filter((post) => {
+          const contentMatch = post.content
+            ?.toString()
+            .toLowerCase()
+            .includes(searchItem.toLowerCase());
+          const nameMatch = post.userId?.name
+            .toLowerCase()
+            .includes(searchItem.toLowerCase());
+          return contentMatch || nameMatch;
+        })
+        .map((post) => (
+          <div
+            key={post._id}
+            className="bg-white shadow p-4 mb-4 rounded flex flex-col"
+          >
+            <div className="flex justify-between items-center mb-2">
+              <span className="font-semibold">{post.userId.name}</span>
+              <span className="text-sm text-gray-500">
+                {new Date(post.createdAt).toLocaleString()}
+              </span>
             </div>
-          )}
-        </div>
-      ))}
+            <p className="mb-2">{post.content}</p>
+
+            {post.userId._id?.toString() === userData._id?.toString() && (
+              <div className="flex gap-2">
+                <button
+                  onClick={() => handleEditPost(post._id, post.content)}
+                  className="text-blue-500 text-sm"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => setPostToDelete(post)}
+                  className="text-red-500 text-sm"
+                >
+                  Delete
+                </button>
+              </div>
+            )}
+          </div>
+        ))}
 
       {postToDelete && (
         <div className="fixed inset-0 backdrop-blur-sm bg-black/30 flex justify-center items-center z-50">
