@@ -272,3 +272,25 @@ export const passReset = async (req, res) => {
     });
   }
 };
+
+export const updateProfile = async (req, res) => {
+  const { name, email } = req.body;
+  const userId = req.userId;
+
+  try {
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    user.name = name;
+    user.email = email;
+    await user.save();
+
+    res.status(200).json({ success: true, message: "Updated Successfully" });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};

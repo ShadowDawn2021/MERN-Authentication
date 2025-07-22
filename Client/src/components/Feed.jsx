@@ -45,8 +45,8 @@ function Feed() {
   };
 
   const handleEditPost = (id, content) => {
-    setEditingId(id); // 🔧 MODIFIED
-    setEditingContent(content); // 🔧 MODIFIED
+    setEditingId(id);
+    setEditingContent(content);
   };
 
   const handleSaveEdit = async () => {
