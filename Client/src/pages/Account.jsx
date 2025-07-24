@@ -6,7 +6,6 @@ import axios from "axios";
 
 function Account() {
   const { userData, backendUrl } = useContext(AppContext);
-
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(userData.name);
   const [email, setEmail] = useState(userData.email);

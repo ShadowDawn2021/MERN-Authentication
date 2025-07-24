@@ -44,8 +44,17 @@ function Login() {
   const handleRegister = async (e) => {
     e.preventDefault();
 
+    const passwordPolicyRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+
     if (password !== confirmPassword) {
       setPasswordError("Passwords does not match");
+      return;
+    }
+
+    if (!passwordPolicyRegex.test(password)) {
+      setPasswordError(
+        "Password must be at least 8 characters long, include an uppercase letter, a number, and a special character."
+      );
       return;
     }
 
